@@ -336,7 +336,7 @@ The detailed use case diagram includes 38 distinct use cases with relationships,
 - Enterprise solutions
 ## Visual Representation
 ![Image Alt Text](https://github.com/neyamulhasan/HireUp/blob/main/docs/HireUp-Home.png)
-[Download the Visual Representation PDF](https://github.com/neyamulhasan/HireUp/blob/main/docs/Visual%20Representation.pdf)
+[Download the Visual Representation Full in PDF](https://github.com/neyamulhasan/HireUp/blob/main/docs/Visual%20Representation.pdf)
 
 
 ## Contributing
