@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HireUP - Use Case Diagram</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --light-bg: #f8f9fa;
+            --border-color: #e9ecef;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: var(--primary-color);
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+            text-align: center;
+        }
+
+        .diagram-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        .diagram {
+            position: relative;
+            width: 1200px;
+            height: 850px;
+            margin: 0 auto;
+            background: linear-gradient(45deg, rgba(52, 152, 219, 0.05) 0%, rgba(44, 62, 80, 0.05) 100%);
+            border-radius: 10px;
+            border: 2px dashed var(--border-color);
+        }
+
+        .system-boundary {
+            position: absolute;
+            top: 50px;
+            left: 180px;
+            right: 180px;
+            bottom: 50px;
+            border: 3px solid var(--primary-color);
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 1;
+        }
+
+        .system-title {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: var(--primary-color);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .actor {
+            position: absolute;
+            width: 120px;
+            height: 140px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid var(--accent-color);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .actor:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-color: var(--primary-color);
+        }
+
+        .actor.active {
+            border-color: var(--success-color);
+            background: rgba(39, 174, 96, 0.1);
+        }
+
+        .actor-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .actor-name {
+            font-weight: bold;
+            color: var(--primary-color);
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .use-case {
+            position: absolute;
+            min-width: 140px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid var(--secondary-color);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 5px 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .use-case:hover {
+            background: rgba(52, 152, 219, 0.1);
+            border-color: var(--accent-color);
+            transform: scale(1.05);
+        }
+
+        .use-case.highlighted {
+            background: rgba(39, 174, 96, 0.2);
+            border-color: var(--success-color);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(39, 174, 96, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); }
+        }
+
+        .use-case-text {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--primary-color);
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .connection-line {
+            position: absolute;
+            background: var(--accent-color);
+            height: 2px;
+            transform-origin: left center;
+            opacity: 0.3;
+            transition: all 0.3s ease;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .connection-line.active {
+            background: var(--success-color);
+            opacity: 0.8;
+            height: 3px;
+            animation: connectionPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes connectionPulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 0.4; }
+        }
+
+        .connection-line.job-seeker-line {
+            background: rgba(52, 152, 219, 0.6);
+        }
+
+        .connection-line.employer-line {
+            background: rgba(39, 174, 96, 0.6);
+        }
+
+        .connection-line.admin-line {
+            background: rgba(231, 76, 60, 0.6);
+        }
+
+        .connection-line.shared-line {
+            background: rgba(128, 128, 128, 0.6);
+            border-top: 2px dashed rgba(128, 128, 128, 0.8);
+            height: 1px;
+        }
+
+        /* Actor positions */
+        .job-seeker { 
+            top: 120px; 
+            left: 30px; 
+            background: rgba(52, 152, 219, 0.1);
+            z-index: 10;
+        }
+        .employer { 
+            top: 350px; 
+            left: 30px; 
+            background: rgba(39, 174, 96, 0.1);
+            z-index: 10;
+        }
+        .admin { 
+            top: 250px; 
+            right: 30px; 
+            background: rgba(231, 76, 60, 0.1);
+            z-index: 10;
+        }
+
+        /* Use case positions - Clean layout with proper spacing */
+
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 5px;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: var(--primary-color);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            max-width: 250px;
+        }
+
+        .tooltip.show {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .diagram {
+                width: 100%;
+                height: 700px;
+                overflow-x: auto;
+            }
+            
+            .system-boundary {
+                left: 50px;
+                right: 50px;
+            }
+            
+            .actor {
+                width: 100px;
+                height: 120px;
+            }
+            
+            .actor-icon {
+                font-size: 2.5rem;
+            }
+            
+            .use-case {
+                min-width: 120px;
+                height: 50px;
+                transform: scale(0.8);
+            }
+            
+            .use-case-text {
+                font-size: 0.7rem;
+            }
+            
+            .btn {
+                padding: 8px 16px;
+                margin: 5px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏢 HireUP Job Portal</h1>
+        <p>Interactive Use Case Diagram</p>
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">30</div>
+                <div class="stat-label">Total Use Cases</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">3</div>
+                <div class="stat-label">System Actors</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">15</div>
+                <div class="stat-label">Job Seeker Features</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">12</div>
+                <div class="stat-label">Employer Features</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">3</div>
+                <div class="stat-label">Admin Features</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn" onclick="highlightActor('job-seeker')">👤 Job Seeker</button>
+        <button class="btn" onclick="highlightActor('employer')">🏢 Employer</button>
+        <button class="btn" onclick="highlightActor('admin')">⚙️ Administrator</button>
+        <button class="btn" onclick="showAllConnections()">🔗 Show All</button>
+        <button class="btn" onclick="resetHighlight()">🔄 Reset</button>
+        <button class="btn" onclick="toggleDemo()" id="demoBtn">▶️ Start Demo</button>
+    </div>
+
+    <div class="diagram-container">
+        <div class="diagram">
+            <div class="system-boundary">
+                <div class="system-title">HireUP Job Portal System</div>
+                
+                <!-- Use Cases arranged in logical groups with proper spacing -->
+                <!-- Authentication Use Cases (Top Row) -->
+                <div class="use-case" style="top: 80px; left: 200px;" data-actor="all" data-tooltip="All users can register for an account">
+                    <div class="use-case-text">Register Account</div>
+                </div>
+                <div class="use-case" style="top: 80px; left: 360px;" data-actor="all" data-tooltip="System login for authenticated access">
+                    <div class="use-case-text">Login System</div>
+                </div>
+                <div class="use-case" style="top: 80px; left: 520px;" data-actor="all" data-tooltip="Secure logout functionality">
+                    <div class="use-case-text">Logout</div>
+                </div>
+
+                <!-- Job Seeker Use Cases (Rows 2-4) -->
+                <div class="use-case" style="top: 150px; left: 200px;" data-actor="job-seeker" data-tooltip="Create and manage personal profile">
+                    <div class="use-case-text">Manage Profile</div>
+                </div>
+                <div class="use-case" style="top: 150px; left: 360px;" data-actor="job-seeker" data-tooltip="Search for available job positions">
+                    <div class="use-case-text">Search Jobs</div>
+                </div>
+                <div class="use-case" style="top: 150px; left: 520px;" data-actor="job-seeker" data-tooltip="Apply advanced filters to job search">
+                    <div class="use-case-text">Filter Jobs</div>
+                </div>
+                
+                <div class="use-case" style="top: 220px; left: 200px;" data-actor="job-seeker" data-tooltip="View detailed job information">
+                    <div class="use-case-text">View Job Details</div>
+                </div>
+                <div class="use-case" style="top: 220px; left: 360px;" data-actor="job-seeker" data-tooltip="Submit job applications">
+                    <div class="use-case-text">Apply for Job</div>
+                </div>
+                <div class="use-case" style="top: 220px; left: 520px;" data-actor="job-seeker" data-tooltip="Track application status">
+                    <div class="use-case-text">Track Applications</div>
+                </div>
+                
+                <div class="use-case" style="top: 290px; left: 200px;" data-actor="job-seeker" data-tooltip="Generate professional resume">
+                    <div class="use-case-text">Generate Resume</div>
+                </div>
+                <div class="use-case" style="top: 290px; left: 360px;" data-actor="job-seeker" data-tooltip="View company profiles and information">
+                    <div class="use-case-text">View Company Profile</div>
+                </div>
+                <div class="use-case" style="top: 290px; left: 520px;" data-actor="job-seeker" data-tooltip="Submit reviews and ratings for companies">
+                    <div class="use-case-text">Submit Reviews</div>
+                </div>
+
+                <div class="use-case" style="top: 360px; left: 200px;" data-actor="job-seeker" data-tooltip="Manage submitted company reviews">
+                    <div class="use-case-text">Manage Reviews</div>
+                </div>
+                <div class="use-case" style="top: 360px; left: 360px;" data-actor="job-seeker" data-tooltip="Read company-published articles">
+                    <div class="use-case-text">Read Articles</div>
+                </div>
+                <div class="use-case" style="top: 360px; left: 520px;" data-actor="job-seeker" data-tooltip="Access personal dashboard">
+                    <div class="use-case-text">View Dashboard</div>
+                </div>
+
+                <!-- Employer Use Cases (Rows 5-7) -->
+                <div class="use-case" style="top: 430px; left: 200px;" data-actor="employer" data-tooltip="Create and manage company profile">
+                    <div class="use-case-text">Manage Company</div>
+                </div>
+                <div class="use-case" style="top: 430px; left: 360px;" data-actor="employer" data-tooltip="Post new job opportunities">
+                    <div class="use-case-text">Post Jobs</div>
+                </div>
+                <div class="use-case" style="top: 430px; left: 520px;" data-actor="employer" data-tooltip="Edit and manage job postings">
+                    <div class="use-case-text">Manage Jobs</div>
+                </div>
+                
+                <div class="use-case" style="top: 500px; left: 200px;" data-actor="employer" data-tooltip="Review job applications from candidates">
+                    <div class="use-case-text">View Applications</div>
+                </div>
+                <div class="use-case" style="top: 500px; left: 360px;" data-actor="employer" data-tooltip="Review candidate profiles and resumes">
+                    <div class="use-case-text">Review Candidates</div>
+                </div>
+                <div class="use-case" style="top: 500px; left: 520px;" data-actor="employer" data-tooltip="Update application status (accept/reject)">
+                    <div class="use-case-text">Update Status</div>
+                </div>
+
+                <div class="use-case" style="top: 570px; left: 200px;" data-actor="employer" data-tooltip="Write and publish company articles">
+                    <div class="use-case-text">Write Articles</div>
+                </div>
+                <div class="use-case" style="top: 570px; left: 360px;" data-actor="employer" data-tooltip="View analytics and job performance">
+                    <div class="use-case-text">View Analytics</div>
+                </div>
+                <div class="use-case" style="top: 570px; left: 520px;" data-actor="employer" data-tooltip="Request company verification">
+                    <div class="use-case-text">Request Verification</div>
+                </div>
+
+                <!-- Administrator Use Cases (Bottom Row) -->
+                <div class="use-case" style="top: 640px; left: 200px;" data-actor="admin" data-tooltip="View system-wide statistics">
+                    <div class="use-case-text">System Statistics</div>
+                </div>
+                <div class="use-case" style="top: 640px; left: 360px;" data-actor="admin" data-tooltip="Verify company authenticity">
+                    <div class="use-case-text">Verify Companies</div>
+                </div>
+                <div class="use-case" style="top: 640px; left: 520px;" data-actor="admin" data-tooltip="Moderate platform content">
+                    <div class="use-case-text">Moderate Content</div>
+                </div>
+            </div>
+
+            <!-- Actors -->
+            <div class="actor job-seeker" data-tooltip="Job seekers search and apply for jobs, manage profiles, and review companies">
+                <div class="actor-icon">옷</div>
+                <div class="actor-name">Job Seeker</div>
+            </div>
+            
+            <div class="actor employer" data-tooltip="Employers post jobs, manage applications, and build company presence">
+                <div class="actor-icon">옷</div>
+                <div class="actor-name">Employer</div>
+            </div>
+            
+            <div class="actor admin" data-tooltip="Administrators monitor platform, verify companies, and moderate content">
+                <div class="actor-icon">옷</div>
+                <div class="actor-name">Administrator</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="legend">
+        <div class="legend-item">
+            <div class="legend-color" style="background: rgba(52, 152, 219, 0.3);"></div>
+            <span>Job Seeker Use Cases</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: rgba(39, 174, 96, 0.3);"></div>
+            <span>Employer Use Cases</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: rgba(231, 76, 60, 0.3);"></div>
+            <span>Administrator Use Cases</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: rgba(128, 128, 128, 0.3);"></div>
+            <span>Shared Use Cases</span>
+        </div>
+    </div>
+
+    <!-- Tooltip element -->
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        // Interactive functionality
+        const actors = document.querySelectorAll('.actor');
+        const useCases = document.querySelectorAll('.use-case');
+        const tooltip = document.getElementById('tooltip');
+        const diagram = document.querySelector('.diagram');
+
+        // Actor-UseCase mapping with positions for connection lines
+        const actorUseCases = {
+            'job-seeker': [
+                'Register Account', 'Login System', 'Logout', 'Manage Profile', 
+                'Search Jobs', 'Filter Jobs', 'View Job Details', 'Apply for Job',
+                'Track Applications', 'Generate Resume', 'View Company Profile', 
+                'Submit Reviews', 'Manage Reviews', 'Read Articles', 'View Dashboard'
+            ],
+            'employer': [
+                'Register Account', 'Login System', 'Logout', 'Manage Company',
+                'Post Jobs', 'Manage Jobs', 'View Applications', 'Review Candidates',
+                'Update Status', 'Write Articles', 'View Analytics', 'Request Verification'
+            ],
+            'admin': [
+                'Login System', 'Logout', 'System Statistics', 
+                'Verify Companies', 'Moderate Content'
+            ]
+        };
+
+        // Get actor positions
+        function getActorPosition(actorType) {
+            const actor = document.querySelector(`.actor.${actorType}`);
+            if (!actor) return null;
+            
+            const rect = actor.getBoundingClientRect();
+            const diagramRect = diagram.getBoundingClientRect();
+            
+            // For admin actor, connect from left side since it's on the right
+            if (actorType === 'admin') {
+                return {
+                    x: rect.left - diagramRect.left,
+                    y: rect.top + rect.height/2 - diagramRect.top
+                };
+            }
+            
+            // For other actors, connect from right side since they're on the left
+            return {
+                x: rect.right - diagramRect.left,
+                y: rect.top + rect.height/2 - diagramRect.top
+            };
+        }
+
+        // Get use case position
+        function getUseCasePosition(useCase, actorType = null) {
+            const rect = useCase.getBoundingClientRect();
+            const diagramRect = diagram.getBoundingClientRect();
+            
+            // For admin actor connections, connect to right side of use case
+            if (actorType === 'admin') {
+                return {
+                    x: rect.right - diagramRect.left,
+                    y: rect.top + rect.height/2 - diagramRect.top
+                };
+            }
+            
+            // For other actors, connect to left side of use case
+            return {
+                x: rect.left - diagramRect.left,
+                y: rect.top + rect.height/2 - diagramRect.top
+            };
+        }
+
+        // Create connection line between actor and use case
+        function createConnectionLine(actorPos, useCasePos, actorType) {
+            const line = document.createElement('div');
+            line.className = `connection-line ${actorType}-line`;
+            
+            const deltaX = useCasePos.x - actorPos.x;
+            const deltaY = useCasePos.y - actorPos.y;
+            const length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            const angle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
+            
+            line.style.left = actorPos.x + 'px';
+            line.style.top = actorPos.y + 'px';
+            line.style.width = length + 'px';
+            line.style.transform = `rotate(${angle}deg)`;
+            
+            return line;
+        }
+
+        // Clear all connection lines
+        function clearConnectionLines() {
+            const existingLines = document.querySelectorAll('.connection-line');
+            existingLines.forEach(line => line.remove());
+        }
+
+        // Draw connections for an actor
+        function drawConnections(actorType) {
+            clearConnectionLines();
+            
+            const actorPos = getActorPosition(actorType);
+            if (!actorPos) return;
+            
+            const relatedUseCases = actorUseCases[actorType] || [];
+            
+            useCases.forEach(useCase => {
+                const text = useCase.querySelector('.use-case-text').textContent;
+                if (relatedUseCases.includes(text)) {
+                    const useCasePos = getUseCasePosition(useCase, actorType);
+                    const line = createConnectionLine(actorPos, useCasePos, actorType);
+                    line.classList.add('active');
+                    diagram.appendChild(line);
+                }
+            });
+
+            // Also draw shared connections (for Register, Login, Logout)
+            const sharedUseCases = ['Register Account', 'Login System', 'Logout'];
+            useCases.forEach(useCase => {
+                const text = useCase.querySelector('.use-case-text').textContent;
+                if (sharedUseCases.includes(text) && !relatedUseCases.includes(text)) {
+                    const useCasePos = getUseCasePosition(useCase, actorType);
+                    const line = createConnectionLine(actorPos, useCasePos, 'shared');
+                    diagram.appendChild(line);
+                }
+            });
+        }
+
+        // Highlight actor and related use cases
+        function highlightActor(actorType) {
+            resetHighlight();
+            
+            // Highlight the actor
+            const actor = document.querySelector(`.actor.${actorType}`);
+            if (actor) {
+                actor.classList.add('active');
+            }
+
+            // Highlight related use cases
+            const relatedUseCases = actorUseCases[actorType] || [];
+            useCases.forEach(useCase => {
+                const text = useCase.querySelector('.use-case-text').textContent;
+                if (relatedUseCases.includes(text)) {
+                    useCase.classList.add('highlighted');
+                }
+            });
+
+            // Draw connection lines
+            setTimeout(() => drawConnections(actorType), 100);
+        }
+
+        // Reset all highlights
+        function resetHighlight() {
+            actors.forEach(actor => actor.classList.remove('active'));
+            useCases.forEach(useCase => useCase.classList.remove('highlighted'));
+            clearConnectionLines();
+        }
+
+        // Tooltip functionality
+        function showTooltip(e, text) {
+            tooltip.textContent = text;
+            tooltip.style.left = e.pageX + 10 + 'px';
+            tooltip.style.top = e.pageY - 10 + 'px';
+            tooltip.classList.add('show');
+        }
+
+        function hideTooltip() {
+            tooltip.classList.remove('show');
+        }
+
+        // Add event listeners for tooltips
+        [...actors, ...useCases].forEach(element => {
+            element.addEventListener('mouseenter', (e) => {
+                const tooltipText = element.getAttribute('data-tooltip');
+                if (tooltipText) {
+                    showTooltip(e, tooltipText);
+                }
+            });
+
+            element.addEventListener('mouseleave', hideTooltip);
+        });
+
+        // Interactive click events
+        actors.forEach(actor => {
+            actor.addEventListener('click', () => {
+                const actorType = actor.classList[1]; // Get the second class name
+                highlightActor(actorType);
+            });
+        });
+
+        // Add click interaction for use cases
+        useCases.forEach(useCase => {
+            useCase.addEventListener('click', () => {
+                const actorType = useCase.getAttribute('data-actor');
+                if (actorType && actorType !== 'all') {
+                    highlightActor(actorType);
+                }
+            });
+        });
+
+        // Show all connections at once
+        function showAllConnections() {
+            resetHighlight();
+            
+            // Highlight all actors
+            actors.forEach(actor => actor.classList.add('active'));
+            
+            // Highlight all use cases
+            useCases.forEach(useCase => useCase.classList.add('highlighted'));
+            
+            // Draw all connections
+            Object.keys(actorUseCases).forEach(actorType => {
+                const actorPos = getActorPosition(actorType);
+                if (!actorPos) return;
+                
+                const relatedUseCases = actorUseCases[actorType] || [];
+                
+                useCases.forEach(useCase => {
+                    const text = useCase.querySelector('.use-case-text').textContent;
+                    if (relatedUseCases.includes(text)) {
+                        const useCasePos = getUseCasePosition(useCase, actorType);
+                        const line = createConnectionLine(actorPos, useCasePos, actorType);
+                        line.classList.add('active');
+                        diagram.appendChild(line);
+                    }
+                });
+            });
+            
+            // Stop any running demo
+            if (isDemoRunning) {
+                stopDemo();
+                const btn = document.getElementById('demoBtn');
+                btn.textContent = '▶️ Start Demo';
+                isDemoRunning = false;
+            }
+        }
+
+        // Toggle demo functionality
+        let isDemoRunning = false;
+        let demoInterval = null;
+        
+        function toggleDemo() {
+            const btn = document.getElementById('demoBtn');
+            if (isDemoRunning) {
+                stopDemo();
+                btn.textContent = '▶️ Start Demo';
+                isDemoRunning = false;
+            } else {
+                startDemo();
+                btn.textContent = '⏸️ Pause Demo';
+                isDemoRunning = true;
+            }
+        }
+
+        // Auto-demo functionality
+        function startDemo() {
+            if (demoInterval) {
+                clearInterval(demoInterval);
+            }
+            
+            const actorTypes = ['job-seeker', 'employer', 'admin'];
+            let currentIndex = 0;
+
+            // Immediately show first actor
+            highlightActor(actorTypes[currentIndex]);
+            currentIndex = (currentIndex + 1) % actorTypes.length;
+
+            demoInterval = setInterval(() => {
+                highlightActor(actorTypes[currentIndex]);
+                currentIndex = (currentIndex + 1) % actorTypes.length;
+            }, 3000);
+        }
+
+        function stopDemo() {
+            if (demoInterval) {
+                clearInterval(demoInterval);
+                demoInterval = null;
+            }
+            resetHighlight();
+        }
+
+        // Make functions globally accessible
+        window.highlightActor = highlightActor;
+        window.resetHighlight = resetHighlight;
+        window.showAllConnections = showAllConnections;
+        window.toggleDemo = toggleDemo;
+
+        // Handle window resize to redraw connections
+        window.addEventListener('resize', () => {
+            // Check if we're in "show all" mode or specific actor mode
+            const activeActors = document.querySelectorAll('.actor.active');
+            if (activeActors.length > 1) {
+                // Multiple actors active - we're in "show all" mode
+                setTimeout(() => showAllConnections(), 100);
+            } else if (activeActors.length === 1) {
+                // Single actor active
+                const actorType = activeActors[0].classList[1];
+                setTimeout(() => drawConnections(actorType), 100);
+            }
+        });
+
+        // Initialize
+        setTimeout(() => {
+            // Set initial button state
+            const btn = document.getElementById('demoBtn');
+            btn.textContent = '▶️ Start Demo';
+            isDemoRunning = false;
+            
+            // Show initial highlight
+            highlightActor('job-seeker');
+            
+            // Auto-start demo after a delay
+            setTimeout(() => {
+                if (!isDemoRunning) {
+                    toggleDemo();
+                }
+            }, 3000);
+        }, 1000);
+    </script>
+</body>
+</html>

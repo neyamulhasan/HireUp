@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Verified - HireUp</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --text-color: #2c3e50;
+            --light-bg: #f8f9fa;
+            --border-color: #e9ecef;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .verification-page {
+            min-height: 100vh;
+            padding: 2rem 0;
+            background: var(--light-bg);
+            position: relative;
+        }
+
+        .verification-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .verification-header h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .verification-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s ease;
+        }
+
+        .verification-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .verification-icon {
+            font-size: 2rem;
+            color: var(--accent-color);
+            background: rgba(52, 152, 219, 0.1);
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .card-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            position: relative;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .verification-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .verification-list li {
+            margin-bottom: 1rem;
+            padding-left: 1.75rem;
+            position: relative;
+            font-size: 1.1rem;
+            color: var(--text-color);
+        }
+
+        .verification-list li::before {
+            content: "✓";
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .text-center {
+            text-align: center;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        .submit-btn {
+            background: var(--accent-color);
+            color: white;
+            padding: 1rem 2rem;
+            font-weight: 500;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            border: none;
+            min-width: 250px;
+            justify-content: center;
+        }
+
+        .submit-btn i {
+            font-size: 1.1rem;
+        }
+
+        .submit-btn:hover {
+            background: #2980b9;
+            color: white;
+            text-decoration: none;
+            transform: translateY(-1px);
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(44, 62, 80, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.75rem 1.25rem;
+            color: var(--accent-color);
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .back-btn i {
+            font-size: 1.1rem;
+            color: var(--accent-color);
+        }
+
+        .back-btn:hover {
+            background: rgba(44, 62, 80, 0.2);
+            color: var(--accent-color);
+            text-decoration: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .email-template {
+            background: var(--light-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 1rem 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .security-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .security-badge i {
+            color: var(--accent-color);
+        }
+
+        .security-badge span {
+            color: white;
+        }
+
+        .lead {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 1rem;
+            font-weight: 400;
+        }
+
+        .alert {
+            border-radius: 8px;
+            border: none;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-info {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        .btn-info:hover {
+            background-color: #2980b9;
+            border-color: #2980b9;
+        }
+
+        @media (max-width: 768px) {
+            .verification-header {
+                padding: 2rem 0;
+            }
+            
+            .verification-header h1 {
+                font-size: 2rem;
+            }
+            
+            .back-btn {
+                top: 10px;
+                left: 10px;
+            }
+
+            .security-badge {
+                position: relative;
+                top: 0;
+                right: 0;
+                display: inline-flex;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="dashboard.php" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Dashboard</span>
+    </a>
+
+    <div class="verification-page">
+        <div class="verification-header text-center">
+            <div class="container">
+                <div class="security-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Secure Verification Process</span>
+                </div>
+                <h1>Get Blue Verified on HireUp</h1>
+                <p class="lead">Enhance your company's credibility and trust with our verification badge</p>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="verification-card">
+                        <div class="card-body">
+                            <div class="text-center verification-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <h2 class="card-title text-center">Verification Requirements</h2>
+                            <ul class="verification-list">
+                                <li>Your company must be legally registered and operating</li>
+                                <li>You must have an active business license</li>
+                                <li>Your company must have a physical office address</li>
+                                <li>You must have an active company website</li>
+                                <li>Your company must have been in operation for at least 6 months</li>
+                                <li>You must have a minimum of 5 employees</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="verification-card">
+                        <div class="card-body">
+                            <div class="text-center verification-icon">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <h2 class="card-title text-center">Required Documents</h2>
+                            <ul class="verification-list">
+                                <li>Business Registration Certificate</li>
+                                <li>Tax Registration Certificate</li>
+                                <li>Business License</li>
+                                <li>Company Bank Statement (last 3 months)</li>
+                                <li>Company Website URL</li>
+                                <li>Office Location Proof</li>
+                                <li>Employee List with Designations</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="verification-card">
+                        <div class="card-body">
+                            <div class="text-center verification-icon">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                            <h2 class="card-title text-center">Verification Process</h2>
+                            <ol class="verification-list">
+                                <li>Complete the verification form below</li>
+                                <li>Submit all required documents</li>
+                                <li>Our verification team will review your application</li>
+                                <li>We may contact you for additional information</li>
+                                <li>Verification process typically takes 5-7 business days</li>
+                                <li>You will receive an email notification of the result</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="verification-card">
+                        <div class="card-body">
+                            <div class="text-center verification-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <h2 class="card-title text-center">Email Submission Format</h2>
+                            <p class="text-center mb-4">Please send your verification request to: <strong>verification@hireup.com</strong></p>
+                            <div class="email-template">
+                                <p><strong>Subject:</strong> Company Verification Request - [Your Company Name]</p>
+                                <p><strong>Email Body:</strong></p>
+                                <p>Dear HireUp Verification Team,</p>
+                                <p>I am writing to request blue verification for our company on HireUp.</p>
+                                <p>Company Details:</p>
+                                <ul class="verification-list">
+                                    <li>Company Name: [Your Company Name]</li>
+                                    <li>Registration Number: [Your Registration Number]</li>
+                                    <li>Business Type: [Your Business Type]</li>
+                                    <li>Website: [Your Website URL]</li>
+                                    <li>Office Address: [Your Office Address]</li>
+                                    <li>Contact Person: [Your Name]</li>
+                                    <li>Contact Number: [Your Phone Number]</li>
+                                </ul>
+                                <p>I have attached all required documents for verification:</p>
+                                <ul class="verification-list">
+                                    <li>Business Registration Certificate</li>
+                                    <li>Tax Registration Certificate</li>
+                                    <li>Business License</li>
+                                    <li>Company Bank Statement</li>
+                                    <li>Office Location Proof</li>
+                                    <li>Employee List</li>
+                                </ul>
+                                <p>Please let me know if you need any additional information.</p>
+                                <p>Best regards,<br>[Your Name]<br>[Your Position]<br>[Your Company Name]</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="verification-card">
+                        <div class="card-body">
+                            <div class="text-center verification-icon">
+                                <i class="fas fa-gavel"></i>
+                            </div>
+                            <h2 class="card-title text-center">Terms and Conditions</h2>
+                            <ol class="terms-list">
+                                <li>All submitted documents must be clear and legible</li>
+                                <li>Documents must be in PDF or JPG format</li>
+                                <li>All information provided must be accurate and up-to-date</li>
+                                <li>HireUp reserves the right to reject any verification request</li>
+                                <li>Verification status may be revoked if terms are violated</li>
+                                <li>We maintain strict confidentiality of all submitted documents</li>
+                                <li>Verification process is free of charge</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="text-center mb-5">
+                        <a href="mailto:verification@hireup.com?subject=Company%20Verification%20Request&body=Dear%20HireUp%20Verification%20Team%2C%0A%0AI%20am%20writing%20to%20request%20blue%20verification%20for%20our%20company%20on%20HireUp.%0A%0APlease%20find%20the%20required%20documents%20attached.%0A%0ABest%20regards%2C" class="btn submit-btn">
+                            <i class="fas fa-paper-plane"></i>Send Verification Request
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
