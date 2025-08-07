@@ -13,7 +13,7 @@ A comprehensive, modern job portal platform that connects job seekers with emplo
 - [Installation](#installation)
 - [User Roles](#user-roles)
 - [Database Schema](#database-schema)
-- [Use Case Diagram](#use-case-diagram)
+- [Use Case](#use-case)
 - [Screenshots](#screenshots)
 - [Contributing](#contributing)
 - [License](#license)
@@ -229,7 +229,7 @@ The application uses a relational database structure with the following main tab
 - **One-to-Many**: Companies → Jobs, Jobs → Applications
 - **Many-to-Many**: Users ↔ Job Applications (through job_applications)
 
-## Use Case Diagram
+## Use Case
 
 The HireUP system supports three main types of users with distinct roles and capabilities:
 
