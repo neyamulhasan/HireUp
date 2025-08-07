@@ -14,7 +14,7 @@ A comprehensive, modern job portal platform that connects job seekers with emplo
 - [User Roles](#user-roles)
 - [Database Schema](#database-schema)
 - [Use Case](#use-case)
-- [Screenshots](#screenshots)
+- [Visual Representation](#Visual-Representation)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -334,7 +334,10 @@ The detailed use case diagram includes 38 distinct use cases with relationships,
 - Video interview integration
 - Blockchain-based credentials
 - Enterprise solutions
-## Screenshots
+## Visual Representation
+![Image Alt Text](https://github.com/neyamulhasan/HireUp/blob/main/docs/HireUp-Home.png)
+[Download the Visual Representation PDF](https://github.com/neyamulhasan/HireUp/blob/main/docs/Visual%20Representation.pdf)
+
 
 ## Contributing
 
